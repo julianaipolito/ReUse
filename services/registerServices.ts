@@ -1,6 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '../config.ts';
 
-const API_BASE_URL = 'http://10.0.3.15:3000/api'; // Substitua pela URL da sua API
+
+const API_BASE_URL = API_URL;
 
 interface RegisterData {
   name: string;

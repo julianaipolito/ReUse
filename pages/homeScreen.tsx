@@ -16,6 +16,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../App';
 import { Float } from 'react-native/Libraries/Types/CodegenTypes';
 import { logoutUser } from '../services/loginServices';
+import { API_URL } from '../config.ts';
+
+
+const API_BASE_URL = API_URL;
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -119,12 +123,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       useNativeDriver: false,
     }).start();
   };
-
-  const getProfilePictureUrl = (path: string) => {
-    if (!path) return null;
-    // Substitui barras invertidas e adiciona o base URL
-    return `http://10.0.3.15:3000${path.replace(/\\/g, '/')}`;
-  };
 /*
   const renderItem = ({ item }: { item: Product }) => (
     <TouchableOpacity
@@ -149,7 +147,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       <View style={{marginTop: 30}} ></View>
       <TouchableOpacity
         style={styles.userInfoContainer}
-        onPress={() => console.log('asdasd')/* navigation.navigate('Profile')*/}
+        onPress={() =>  navigation.navigate('Profile')}
         >
         {user && (
             <>
@@ -161,7 +159,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <Image
                 source={
                 user.profilePicture 
-                    ? { uri: `http://10.0.3.15:3000/api/pictures${user.profilePicture.replace(/\\/g, '/')}` } 
+                    ? { uri: `${API_BASE_URL}/pictures${user.profilePicture.replace(/\\/g, '/')}` } 
                     : require('../assets/profile.png')
                 }
                 style={styles.userImage}
@@ -236,7 +234,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             //navigation.navigate('ReceivedProposals');
           }
           if (name === 'bt_profile') {
-            //navigation.navigate('Profile');
+            navigation.navigate('Profile');
           }
           if (name === 'bt_logoff') {
             await logoutUser();

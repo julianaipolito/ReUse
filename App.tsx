@@ -12,12 +12,14 @@ import Login from './pages/loginScreen';
 import Register from './pages/registroScreen';
 import Home from './pages/homeScreen';
 import Termos from './pages/termos'
+import Profile from './pages/ProfileScreen'
 
 export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   Home: undefined;
   Termos: undefined;
+  Profile: undefined;
 };
 
 const Stack = createStackNavigator();
@@ -33,6 +35,7 @@ const App = () => {
             <Stack.Screen name="Register" options={{ headerShown: false }} component={Register} />
             <Stack.Screen name="Termos" options={{ headerShown: true }} component={Termos} />
             <Stack.Screen name="Home" options={{ headerShown: false }} component={Home} />
+            <Stack.Screen name="Profile" options={{ headerShown: false }} component={Profile} />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>

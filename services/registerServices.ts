@@ -1,8 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { API_URL } from '../config.ts';
-
+import { API_URL } from '../config';
 
 const API_BASE_URL = API_URL;
+
+// Constantes para armazenamento
+const TOKEN_KEY = 'userToken';
+const USER_DATA_KEY = 'userData';
 
 interface RegisterData {
   name: string;
@@ -23,6 +26,24 @@ interface RegisterResponse {
 
 export const registerUser = async (data: RegisterData): Promise<RegisterResponse> => {
   try {
+    // Validação básica dos campos
+    if (!data.name || !data.email || !data.password) {
+      throw new Error('Nome, email e senha são obrigatórios');
+    }
+
+    // Validações específicas
+    if (!validateName(data.name)) {
+      throw new Error('Nome deve ter pelo menos 3 caracteres');
+    }
+
+    if (!validateEmail(data.email)) {
+      throw new Error('Email inválido');
+    }
+
+    if (!validatePassword(data.password)) {
+      throw new Error('Senha deve ter pelo menos 6 caracteres');
+    }
+
     // Criar FormData para enviar a imagem
     const formData = new FormData();
     formData.append('name', data.name);
@@ -30,6 +51,8 @@ export const registerUser = async (data: RegisterData): Promise<RegisterResponse
     formData.append('password', data.password);
     
     if (data.profilePicture) {
+      // Usando uma abordagem que funciona com React Native
+      // @ts-ignore - O FormData do React Native aceita este formato para arquivos
       formData.append('profilePicture', {
         uri: data.profilePicture,
         name: `profile_${Date.now()}.jpg`,
@@ -51,12 +74,12 @@ export const registerUser = async (data: RegisterData): Promise<RegisterResponse
     const responseData = await response.json();
 
     if (!response.ok) {
-      throw new Error(responseData.message || 'Erro ao registrar usuário');
+      throw new Error(responseData.message ?? 'Erro ao registrar usuário');
     }
 
     // Salva o token e informações do usuário no AsyncStorage
-    await AsyncStorage.setItem('userToken', responseData.token);
-    await AsyncStorage.setItem('userData', JSON.stringify(responseData.user));
+    await AsyncStorage.setItem(TOKEN_KEY, responseData.token);
+    await AsyncStorage.setItem(USER_DATA_KEY, JSON.stringify(responseData.user));
 
     return responseData;
   } catch (error) {
